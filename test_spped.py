@@ -3,9 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Define command paths
-command_sequential = "./hamming_sequential.exe"
-command_parallel = "./hamming_parallel.exe"
-command_cuda = "./hamming_cuda.exe"
+command_sequential = ".\hamming_sequential.exe"
+command_parallel = ".\hamming_parallel.exe"
+command_cuda = ".\hamming_cuda.exe"
 
 def remove_results_file(file_path):
     """Remove the results.csv file if it exists."""
@@ -20,8 +20,8 @@ def create_results_file(file_path):
 def run_tests():
     """Run the hamming tests with different parameters."""
     print("Running tests...")
-    for n in range(1000, 10001, 1000):
-        for m in range(1000, 10000, 9000):
+    for n in range(1000, 4001, 1000):
+        for m in range(1000, 2001, 500):
             print(f"n={n}, m={m}")
             print("Sequential")
             os.system(f"{command_sequential} {n} {m}")
@@ -44,15 +44,19 @@ def read_and_process_results(file_path):
 
 def plot_results(df_seq, df_par, df_cuda):
     """Plot the data from the processed DataFrames."""
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(20, 8))
 
-    plt.plot(df_seq.index, df_seq['time'], label='Sequential', linestyle='-')
-    plt.plot(df_par.index, df_par['time'], label='Parallel', linestyle='--')
-    plt.plot(df_cuda.index, df_cuda['time'], label='CUDA', linestyle=':')
+    # plt.plot(df_seq.index, df_seq['time'], label='Sequential', linestyle='-')
+    # plt.plot(df_par.index, df_par['time'], label='Parallel', linestyle='--')
+    # plt.plot(df_cuda.index, df_cuda['time'], label='CUDA', linestyle=':')
 
-    plt.xlabel('Sorted Index')
+    plt.plot('(' + df_seq['n'].astype(str) + ',' + df_seq['m'].astype(str) + ')', df_seq['time'], label='Sequential', linestyle='-')
+    plt.plot('(' + df_par['n'].astype(str) + ',' + df_par['m'].astype(str) + ')', df_par['time'], label='Parallel', linestyle='-')
+    plt.plot('(' + df_cuda['n'].astype(str) + ',' + df_cuda['m'].astype(str) + ')', df_cuda['time'], label='CUDA', linestyle='-')
+
+    plt.xlabel('(n,m)')
     plt.ylabel('Time (s)')
-    plt.title('Execution Time by Method (Sorted within Each Method)')
+    plt.title('Execution Time by Method')
     plt.legend()
     plt.grid(True)
     plt.savefig('results.png')

@@ -43,7 +43,7 @@ std::vector<std::pair<int, int>> parrallel_count_all_pairs_with_distance_equal_n
     for (int i = 0; i < vector_of_sequences.size(); i++) {
         for (int j = i + 1; j < vector_of_sequences.size(); j++) {
             if (count_hamming_distance(vector_of_sequences[i], vector_of_sequences[j]) == n) {
-                // #pragma omp critical
+                #pragma omp critical
                 pairs.push_back(std::make_pair(i, j));
             }
         }
@@ -56,21 +56,20 @@ std::vector<std::vector<bool>> generate_sequences_based_on_lines_and_points(int 
     std::vector<std::pair<double, double>> lines;
     std::vector<std::pair<double, double>> points;
 
-    // Generate m random lines
+    // m random lines
     for (int i = 0; i < m; ++i) {
         double slope = (rand() % 20001 - 10000) / 100.0; // from -100 to 100
         double intercept = (rand() % 20001 - 10000) / 100.0; // from -100 to 100
         lines.push_back({slope, intercept});
     }
 
-    // Generate n random points
+    // n random points
     for (int i = 0; i < n; ++i) {
         double x = (rand() % 20001 - 10000) / 100.0; // from -100 to 100
         double y = (rand() % 20001 - 10000) / 100.0; // from -100 to 100
         points.push_back({x, y});
     }
 
-    // Generate the sequences based on points and lines
     for (const auto& point : points) {
         std::vector<bool> sequence;
         for (const auto& line : lines) {
@@ -84,7 +83,6 @@ std::vector<std::vector<bool>> generate_sequences_based_on_lines_and_points(int 
 }
 
 void save_sequences_to_file(const std::vector<std::vector<bool>>& sequences, const std::string& filename) {
-    // Clear and recreate the file
     std::ofstream file(filename);
     for (const auto& sequence : sequences) {
         for (const auto& bit : sequence) {
