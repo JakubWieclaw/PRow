@@ -18,23 +18,25 @@ int main(int argc, char** argv) {
 
     srand(time(NULL));
 
+    //std::cout << "Generating " << n << " sequences of " << m << " bits" << std::endl;
     //auto sequences = generate_sequences_based_on_lines_and_points(n, m);
     auto sequences = load_sequences_from_file("sequences.txt");
+    //std::cout << "Generating finshed" << std::endl;
 
     // start timne measurement
     auto start = std::chrono::high_resolution_clock::now();
 
-    auto pairs = parrallel_count_all_pairs_with_distance_equal_n(sequences, 1);
+    auto pairs = cuda_count_all_pairs_with_distance_equal_n(sequences, 1);
 
     // end time measurement
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     
-        
 
     // Insert n, m time measurment to database ../results.csv
     std::ofstream outfile;
     outfile.open("results.csv", std::ios_base::app);
-    outfile << "parallel," << n << "," << m << "," << elapsed.count() << "\n";
+    outfile << "cuda," << n << "," << m << "," << elapsed.count() << "\n";
     outfile.close();
+    return 0;
 }
