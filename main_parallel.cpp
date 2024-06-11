@@ -30,7 +30,12 @@ int main(int argc, char** argv) {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     
-        
+    std::ofstream outfile_pairs;
+    outfile_pairs.open("parallel_pairs.txt");
+    for (auto pair : pairs) {
+        outfile_pairs << pair.first << " " << pair.second << "\n";
+    }
+    outfile_pairs.close();
 
     // Insert n, m time measurment to database ../results.csv
     std::ofstream outfile;

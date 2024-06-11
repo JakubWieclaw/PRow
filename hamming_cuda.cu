@@ -14,23 +14,34 @@ __device__ int count_hamming_distance_cuda(const bool* a, const bool* b, int m) 
     return distance;
 }
 
+
 __global__ void count_all_pairs_with_distance_equal_n_cuda(const bool* d_sequences, int* d_pairs, int num_sequences, int m, int n, int* d_count) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
+
+    // Calculate the number of pairs to be considered
     int total_pairs = num_sequences * (num_sequences - 1) / 2;
+    if (idx >= total_pairs) return;
 
-    if (idx < total_pairs) {
-        int i = idx / (num_sequences - 1);
-        int j = idx % (num_sequences - 1);
-        if (j >= i) j++;
-
-        const bool* a = d_sequences + i * m;
-        const bool* b = d_sequences + j * m;
-
-        if (count_hamming_distance_cuda(a, b, m) == n) {
-            int index = atomicAdd(d_count, 1);
-            d_pairs[index * 2] = i;
-            d_pairs[index * 2 + 1] = j;
+    // Calculate the i and j indices from the flat index
+    int i = 0;
+    int j = 0;
+    int k = idx;
+    for (i = 0; i < num_sequences; i++) {
+        int remaining_pairs = (num_sequences - i - 1);
+        if (k < remaining_pairs) {
+            j = i + 1 + k;
+            break;
         }
+        k -= remaining_pairs;
+    }
+
+    const bool* a = d_sequences + i * m;
+    const bool* b = d_sequences + j * m;
+
+    if (count_hamming_distance_cuda(a, b, m) == n) {
+        int index = atomicAdd(d_count, 1);
+        d_pairs[index * 2] = i;
+        d_pairs[index * 2 + 1] = j;
     }
 }
 

@@ -31,6 +31,14 @@ int main(int argc, char** argv) {
     // end time measurement
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
+
+    // Print pairs into cuda_pairs.txt
+    std::ofstream outfile_pairs;
+    outfile_pairs.open("cuda_pairs.txt");
+    for (auto pair : pairs) {
+        outfile_pairs << pair.first << " " << pair.second << "\n";
+    }
+    outfile_pairs.close();
     
 
     // Insert n, m time measurment to database ../results.csv
