@@ -1,0 +1,2 @@
+If you have cuda installed then you can run the project by using commands from compile.sh or directly run the script
+Then run test_speed.py to test the differences in speed between sequential, parallel and cuda implementations

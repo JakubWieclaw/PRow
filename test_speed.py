@@ -98,9 +98,10 @@ def plot_results(df_seq, df_par, df_cuda):
 
 def main():
     results_file = "results.csv"
-    # remove_results_file(results_file)
-    # create_results_file(results_file)
-    # run_tests()
+    # Comment next 3 line if you only want to change plots on the same results
+    remove_results_file(results_file)
+    create_results_file(results_file)
+    run_tests()
     df_seq, df_par, df_cuda = read_and_process_results(results_file)
     plot_results(df_seq, df_par, df_cuda)
 
